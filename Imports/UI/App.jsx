@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 
 import CanvasDraw from "./CanvasDraw";
+import BarChart from "./BarChart";
 
 class App extends Component {
     constructor(props) {
@@ -10,8 +11,14 @@ class App extends Component {
 
     render() {
         return (
-            <div className="container">
-                <CanvasDraw></CanvasDraw>
+            <div className="container row">
+                <div className="col-lg-6 col-md-6 col-sm-6">
+                    <CanvasDraw/>
+                </div>
+                <div className="col-lg-6 col-md-6 col-sm-6">
+                    <BarChart></BarChart>
+                </div>
+
             </div>
 
         );
