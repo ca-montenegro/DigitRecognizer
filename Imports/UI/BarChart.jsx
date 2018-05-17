@@ -14,22 +14,12 @@ class BarChart extends Component {
         this.barWidth = 20;
 
         this.xScale = d3.scaleLinear()
-            .range([0,10]);
+            .range([0,this.width]);
 
         this.yScale = d3.scaleLinear()
             .range([this.height, 0]);
 
 
-
-
-
-        d3.tip = d3tip;
-        this.tip = d3.tip()
-            .attr('class', 'd3-tip')
-            .offset([-10, 0])
-            .html(function(d) {
-                return "<strong>Frequency:</strong> <span style='color:red'>hola</span>";
-            });
 
         this.svg = d3.select("#chart")
             .attr("width", this.width + this.margin.left + this.margin.right)
@@ -37,7 +27,7 @@ class BarChart extends Component {
             .append("g")
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
-        this.svg.call(this.tip);
+
 
 
         /*this.width = 400;
@@ -59,15 +49,28 @@ class BarChart extends Component {
             .range([0,10]);*/
 
     }
+    componentWillUpdate(nextProps, nextState){
+        this.update(nextProps.predictions);
+        //update(this.props.data);
+    }
 
     update(myData)
     {
-        this.xScale.domain([0,10]);
+        if(myData){
+            myData = myData.map((e,i)=>{
+                return ({
+                    value:i,
+                    prob:e
+                })
+            })
+        }
+        console.log(myData);
+        this.xScale.domain([0,9]);
 
         this.svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + this.height + ")")
-            .call(this.xAxis);
+            .call(d3.axisBottom(this.xScale));
 
         /*svg.append("g")
             .attr("class", "y axis")
@@ -78,19 +81,37 @@ class BarChart extends Component {
             .attr("dy", ".71em")
             .style("text-anchor", "end")
             .text("Frequency");*/
+        this.rect =  this.svg.selectAll("rect")
+            .data(myData);
 
-        svg.selectAll(".bar")
-            .data(data)
-            .enter().append("rect")
+        this.rect.exit()
+            .transition()
+            .duration(300)
+            .remove();
+
+        d3.tip = d3tip;
+        this.tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function(d) {
+                return "<strong>Probability:</strong> <span style='color:red'>"+d.prob+"</span>";
+            });
+
+        this.svg.call(this.tip);
+
+        this.rect.enter().append("rect")
             .attr("class", "bar")
-            .attr("x", (d)=> { return this.x(d.value); })
+            .merge(this.rect)
+            .attr("x", (d)=> { return this.xScale(d.value); })
             .attr("width", this.barWidth)
             .attr("y", (d)=> { return this.yScale(d.prob); })
-            .attr("height", (d)=> { return this.height - this.yScale(d.Prob); })
+            .attr("height", (d)=> { return this.height - this.yScale(d.prob); })
             .on('mouseover', this.tip.show)
-            .on('mouseout', this.tip.hide)
+            .on('mouseout', this.tip.hide);
 
-        this.xAxis = d3.axisBottom(this.xScale);
+
+
+        //this.xAxis = d3.axisBottom(this.xScale);
         /*this.rect = this.chart.selectAll("rect")
             .data(myData);
 

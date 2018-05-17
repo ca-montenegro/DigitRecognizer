@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {findDOMNode} from 'react-dom'
-import TF from "../API/Tfmodel";
 import * as tf from "@tensorflow/tfjs/dist/index";
 
 class CanvasDraw extends Component {
@@ -27,40 +26,8 @@ class CanvasDraw extends Component {
         this.clickDrag = [];
         this.paint = false;
         this.canvas = findDOMNode(this.canvasRef);
-        /*let canvasDiv = document.getElementById("canvasDiv");
-        canvas = document.createElement("canvas");
-        canvas.setAttribute("id", "canvas");
-        canvasDiv.appendChild(canvas);
-        canva = document.getElementById("canvas");*/
         this.ctx = this.canvas.getContext("2d");
-        /*canva.setAttribute("onMouseDown", function(e){
-            let mouseX = e.pageX - this.offsetLeft;
-            let mouseY = e.pageY - this.offsetTop;
 
-            paint = true;
-            addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-            redraw();
-        });
-        canva.mousedown(function(e){
-            let mouseX = e.pageX - this.offsetLeft;
-            let mouseY = e.pageY - this.offsetTop;
-
-            paint = true;
-            addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-            redraw();
-        });
-        canva.mousemove((e)=>{
-            if(paint){
-                addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-                redraw();
-            }
-        });
-        canva.mouseup((e)=>{
-            paint = false;
-        });
-        canva.mouseleave((e)=>{
-            paint = false;
-        });*/
     }
 
     addClick(x, y) {
@@ -71,7 +38,7 @@ class CanvasDraw extends Component {
     redraw() {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         this.ctx.save();
-        this.ctx.strokeStyle = "#df4b26";
+        this.ctx.strokeStyle = "#111111";
         this.ctx.lineJoin = "round";
         this.ctx.lineCap = 'round';
         this.ctx.lineWidth = 5;
@@ -91,7 +58,8 @@ class CanvasDraw extends Component {
         {
             const {top, left} = this.canvas.getBoundingClientRect();
             this.paint = true;
-            this.addClick(e.pageX - left, e.pageY - top);
+            this.addClick(e.pageX, e.pageY);
+            //this.addClick(e.pageX, e.pageY);
             this.redraw();
         }
     }
@@ -99,6 +67,7 @@ class CanvasDraw extends Component {
     onMouseMove(e) {
         if (this.paint) {
             this.addClick(e.pageX, e.pageY);
+            //this.addClick(e.pageX, e.pageY);
             this.redraw();
         }
     }
@@ -106,24 +75,22 @@ class CanvasDraw extends Component {
     // Function when mouse is out boundary of canvas
     onMouseOut(e) {
         this.paint = false;
-        //console.log(this.ctx.getImageData(0,0,300,150));
     }
 
     // Function when mouse is no-click
     onMouseUp(e) {
         this.paint = false;
         this.ctx.drawImage(this.canvas, 0,0,28,28);
-        img = (this.ctx.getImageData(0,0,28,28));
-        console.log(img);
         console.log("Call predict");
+        img = (this.ctx.getImageData(0,0,28,28));
         this.predict(img);
+
     }
 
     async predict(imga){
         console.log(this.model);
        const pred = await tf.tidy(()=>{
             let img = tf.fromPixels(imga,1);
-            console.log(img);
             img = img.reshape([1,28,28,1]);
             img = tf.cast(img, "float32");
 
@@ -131,8 +98,15 @@ class CanvasDraw extends Component {
             output = this.model.predict(img);
 
             this.predictions = Array.from(output.dataSync());
-            console.log(this.predictions);
+            this.props.updatePred(this.predictions);
+
         });
+    }
+
+    clear() {
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        this.clickX=[];
+        this.clickY=[];
     }
 
     render() {

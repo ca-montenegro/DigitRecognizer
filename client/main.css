@@ -1,1 +1,7 @@
 /* CSS declarations go here */
+.wrapper {
+    display: inline-flex;
+    justify-content: flex-end;
+    border: 10px solid;
+    transition: border-color .2s ease-in;
+}
