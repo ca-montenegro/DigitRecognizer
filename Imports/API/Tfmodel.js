@@ -9,28 +9,20 @@ let linerModel = tf.Sequential,
 Meteor.methods({
 
     "train"(){
-        //this.trainNewModel();
-        try{
-            tf.loadModel('../Assets/model.json')
-                .then((resp)=>{
-                    console.log(resp)
-                });
-        }catch (e){
-            if(e)throw e;
-        }
-
+       tf.loadModel("Assets/model.json")
+           .then(resp=> console.log(resp))
+           .then(res => {this.model=res})
+           .catch(e=>{throw e});
     },
 
-    async loadModel() {
-        this.model = await tf.loadModel('../Assets/model.json');
+    async loadModel(){
+        this.model = await tf.loadModel("Assets/model.json");
     },
-
    "predict"(imga){
-
-        try{
-            console.log("predict");
-            const pred = tf.tidy(()=>{
+            console.log(this.model);
+            tf.tidy(()=>{
                 let img = tf.fromPixels(imga,1);
+                console.log(img);
                 img = img.reshape([1,28,28,1]);
                 img = tf.cast(img, "float32");
 
@@ -40,11 +32,6 @@ Meteor.methods({
                 this.predictions = Array.from(output.dataSync());
                 console.log(this.predictions);
         });
-            return pred;
-        }
-        catch (e){
-
-        }
 
 
    },

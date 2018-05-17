@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {findDOMNode} from 'react-dom'
 import TF from "../API/Tfmodel";
+import * as tf from "@tensorflow/tfjs/dist/index";
 
 class CanvasDraw extends Component {
     constructor(props) {
@@ -13,15 +14,14 @@ class CanvasDraw extends Component {
         this.onMouseOut = this.onMouseOut.bind(this);
     }
 
-    componentWillMount(){
-        Meteor.call("train", (err, resp)=>{
-            if(err) throw err;
-            console.log(resp);
-        })
+    async loadModel(){
+        this.model = await tf.loadModel("Assets/model.json");
     }
-
     componentDidMount() {
 
+        console.log("LoDING MODEL");
+
+        this.loadModel().then((d)=>console.log(this.model)).catch(e=>{throw e});
         this.clickX = [];
         this.clickY = [];
         this.clickDrag = [];
@@ -90,7 +90,6 @@ class CanvasDraw extends Component {
     onMouseDown(e) {
         {
             const {top, left} = this.canvas.getBoundingClientRect();
-            console.log("Hola");
             this.paint = true;
             this.addClick(e.pageX - left, e.pageY - top);
             this.redraw();
@@ -113,14 +112,27 @@ class CanvasDraw extends Component {
     // Function when mouse is no-click
     onMouseUp(e) {
         this.paint = false;
-        img = (this.ctx.getImageData(0,0,300,150));
+        this.ctx.drawImage(this.canvas, 0,0,28,28);
+        img = (this.ctx.getImageData(0,0,28,28));
         console.log(img);
         console.log("Call predict");
-        Meteor.call('predict', img, (err, resp)=>{
-            if(err) throw err;
-            console.log("Canvas, ", resp);
-            }
-        )
+        this.predict(img);
+    }
+
+    async predict(imga){
+        console.log(this.model);
+       const pred = await tf.tidy(()=>{
+            let img = tf.fromPixels(imga,1);
+            console.log(img);
+            img = img.reshape([1,28,28,1]);
+            img = tf.cast(img, "float32");
+
+            let output = [];
+            output = this.model.predict(img);
+
+            this.predictions = Array.from(output.dataSync());
+            console.log(this.predictions);
+        });
     }
 
     render() {
