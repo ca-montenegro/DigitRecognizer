@@ -58,7 +58,7 @@ class CanvasDraw extends Component {
         {
             const {top, left} = this.canvas.getBoundingClientRect();
             this.paint = true;
-            this.addClick(e.pageX, e.pageY);
+            this.addClick(e.pageX-left, e.pageY-top);
             //this.addClick(e.pageX, e.pageY);
             this.redraw();
         }
@@ -66,7 +66,8 @@ class CanvasDraw extends Component {
 
     onMouseMove(e) {
         if (this.paint) {
-            this.addClick(e.pageX, e.pageY);
+            const {top, left} = this.canvas.getBoundingClientRect();
+            this.addClick(e.pageX-left, e.pageY-top);
             //this.addClick(e.pageX, e.pageY);
             this.redraw();
         }

@@ -5,3 +5,9 @@
     border: 10px solid;
     transition: border-color .2s ease-in;
 }
+canvas {
+    cursor: crosshair;
+}
+.row {
+    margin: 10vh 5vw;
+}

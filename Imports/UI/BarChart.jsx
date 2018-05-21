@@ -9,8 +9,8 @@ class BarChart extends Component {
 
     componentDidMount(){
         this.margin = {top: 40, right: 20, bottom: 30, left: 40};
-            this.width = 960 - this.margin.left - this.margin.right;
-        this.height = 500 - this.margin.top - this.margin.bottom;
+            this.width = 600 - this.margin.left - this.margin.right;
+        this.height = 400 - this.margin.top - this.margin.bottom;
         this.barWidth = 20;
 
         this.xScale = d3.scaleLinear()
@@ -19,7 +19,7 @@ class BarChart extends Component {
         this.yScale = d3.scaleLinear()
             .range([this.height, 0]);
 
-
+        this.color = d3.scaleOrdinal(d3.schemeCategory10);
 
         this.svg = d3.select("#chart")
             .attr("width", this.width + this.margin.left + this.margin.right)
@@ -106,6 +106,9 @@ class BarChart extends Component {
             .attr("width", this.barWidth)
             .attr("y", (d)=> { return this.yScale(d.prob); })
             .attr("height", (d)=> { return this.height - this.yScale(d.prob); })
+            .style("fill", (d)=>{
+                return this.color(d);
+            })
             .on('mouseover', this.tip.show)
             .on('mouseout', this.tip.hide);
 
