@@ -23,18 +23,23 @@ class App extends Component {
     render() {
         return (
             <div className="container">
+                <br/>
+                <h1>Digit Recognizer</h1>
+                <h2>TensorflowJS, React, Meteor, D3</h2>
                 <div className="row justify-content-center">
                     <div className="col-lg-4 col-md-4 col-sm-4">
-                        <h2>Draw number from 0 to 9</h2>
+                        <h2>Draw number 0 to 9</h2>
                         <div className="wrapper">
                             <CanvasDraw ref={instance => {
                                 this.canva = instance;
                             }} updatePred={this.updatePredictions}/>
-                            <br/>
+
                         </div>
-                            <button onClick={() => {
+                        <br/>
+                        <br/>
+                            <button className="btn btn-dark" onClick={() => {
                                 this.canva.clear();
-                            }}>ClearMen
+                            }}>Clear canvas
                             </button>
                     </div>
 
@@ -43,6 +48,7 @@ class App extends Component {
                         <BarChart predictions={this.state.predictions}/>
                     </div>
                 </div>
+                <h4>Made by Camilo Montenegro</h4>
 
 
 

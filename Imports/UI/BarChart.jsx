@@ -71,17 +71,7 @@ class BarChart extends Component {
             .attr("class", "x axis")
             .attr("transform", "translate(0," + this.height + ")")
             .call(d3.axisBottom(this.xScale));
-
-        /*svg.append("g")
-            .attr("class", "y axis")
-            .call(this.yAxis)
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("Frequency");*/
-        this.rect =  this.svg.selectAll("rect")
+        this.rect =  this.svg.selectAll(".bar")
             .data(myData);
 
         this.rect.exit()
@@ -101,7 +91,11 @@ class BarChart extends Component {
 
         this.rect.enter().append("rect")
             .attr("class", "bar")
+            .on('mouseover', this.tip.show)
+            .on('mouseout', this.tip.hide)
             .merge(this.rect)
+            .transition()
+            .duration(2000)
             .attr("x", (d)=> { return this.xScale(d.value); })
             .attr("width", this.barWidth)
             .attr("y", (d)=> { return this.yScale(d.prob); })
@@ -109,24 +103,8 @@ class BarChart extends Component {
             .style("fill", (d)=>{
                 return this.color(d);
             })
-            .on('mouseover', this.tip.show)
-            .on('mouseout', this.tip.hide);
 
 
-
-        //this.xAxis = d3.axisBottom(this.xScale);
-        /*this.rect = this.chart.selectAll("rect")
-            .data(myData);
-
-        this.rect.enter()
-            .append("rect")
-            .merge(this.rect)
-            .text((d)=>{return d.val;})
-            .style("fill", "darkblue")
-            .attr("x", 0)
-            .style("width", (d)=>{
-                return d
-            })*/
     }
     render() {
         return (

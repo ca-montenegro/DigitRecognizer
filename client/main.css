@@ -1,9 +1,13 @@
 /* CSS declarations go here */
+body{
+    background: lightgrey !important;
+}
 .wrapper {
     display: inline-flex;
     justify-content: flex-end;
     border: 10px solid;
     transition: border-color .2s ease-in;
+    color:#195da0;
 }
 canvas {
     cursor: crosshair;
