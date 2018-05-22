@@ -48,7 +48,7 @@ class App extends Component {
                         <BarChart predictions={this.state.predictions}/>
                     </div>
                 </div>
-                <h4>Made by Camilo Montenegro</h4>
+                <h4>Made with ❤️ by <a href="https://ca-montenegro.github.io">Camilo Montenegro</a></h4>
 
 
 
