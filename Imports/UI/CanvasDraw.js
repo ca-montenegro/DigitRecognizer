@@ -90,7 +90,11 @@ class CanvasDraw extends Component {
 
     async predict(imga){
         console.log(this.model);
+
+        //Administración de memoria, método que libera los tensores usados cuando se termina la predicción.
        const pred = await tf.tidy(()=>{
+
+           //28X28X1(Color channel)
             let img = tf.fromPixels(imga,1);
             img = img.reshape([1,28,28,1]);
             img = tf.cast(img, "float32");
