@@ -44,7 +44,7 @@ class App extends Component {
                     </div>
 
                     <div className="col-lg-8 col-md-8 col-sm-8">
-                        <h2>Predictions</h2>
+                        <h2>TensorFlow predictions</h2>
                         <BarChart predictions={this.state.predictions}/>
                     </div>
                 </div>

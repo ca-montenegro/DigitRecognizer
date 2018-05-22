@@ -27,27 +27,6 @@ class BarChart extends Component {
             .append("g")
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
-
-
-
-        /*this.width = 400;
-        this.height = 400;
-        this.margin = {top:10, bottom:10, left :10, right:10};
-        this.barWidth = 20;
-        this.padding = 20;
-        this.chart = d3.select("#chart")
-            .attr("width", this.width + this.margin.left + this.margin.right)
-            .attr("height", this.height)
-            .append("g")
-            .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
-
-        this.xAxis = this.chart.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + (this.height-this.padding)+")");
-
-        this.xScale = d3.scaleLinear()
-            .range([0,10]);*/
-
     }
     componentWillUpdate(nextProps, nextState){
         this.update(nextProps.predictions);
